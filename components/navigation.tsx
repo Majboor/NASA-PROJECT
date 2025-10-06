@@ -45,6 +45,12 @@ export function Navigation() {
             >
               Prompt Now
             </Link>
+            <Link
+              href="/guide"
+              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Guide
+            </Link>
           </div>
 
           {/* Desktop CTA Button */}
@@ -117,6 +123,13 @@ export function Navigation() {
                   onClick={toggleMenu}
                 >
                   Prompt Now
+                </Link>
+                <Link
+                  href="/guide"
+                  className="text-xl font-semibold text-primary-foreground hover:text-primary-foreground/80 transition-colors"
+                  onClick={toggleMenu}
+                >
+                  Guide
                 </Link>
               </div>
 

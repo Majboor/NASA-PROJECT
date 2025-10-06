@@ -183,7 +183,12 @@ export function GuideModal({ open, onClose }: GuideModalProps) {
               <div className="text-center text-xs text-muted-foreground mb-2">Created by our software</div>
               <h4 className="text-base font-semibold text-foreground mb-1">Professional</h4>
               <p className="text-sm text-muted-foreground mb-4">Deep dive into constraints, systems, and evaluation criteria.</p>
-              <Button onClick={() => { setSelectedGuide("professional"); setStepIndex(0) }} className="mt-auto">Start Professional Guide</Button>
+              <div className="flex items-center gap-2 mt-auto">
+                <Button onClick={() => { setSelectedGuide("professional"); setStepIndex(0) }}>Start Professional Guide</Button>
+                <a href="/PHD Guide nova .pdf" download>
+                  <Button variant="outline">Download PDF</Button>
+                </a>
+              </div>
             </div>
 
             <div className="rounded-xl border border-border/50 bg-card/50 p-5 flex flex-col">
@@ -193,7 +198,12 @@ export function GuideModal({ open, onClose }: GuideModalProps) {
               <div className="text-center text-xs text-muted-foreground mb-2">Created by our software</div>
               <h4 className="text-base font-semibold text-foreground mb-1">For Everyone</h4>
               <p className="text-sm text-muted-foreground mb-4">Simple, friendly walkthrough of how the app works.</p>
-              <Button onClick={() => { setSelectedGuide("everyone"); setStepIndex(0) }} className="mt-auto" variant="outline">Start For Everyone</Button>
+              <div className="flex items-center gap-2 mt-auto">
+                <Button onClick={() => { setSelectedGuide("everyone"); setStepIndex(0) }} variant="outline">Start For Everyone</Button>
+                <a href="/Kid nova _2.pdf" download>
+                  <Button variant="outline">Download PDF</Button>
+                </a>
+              </div>
             </div>
           </div>
         ) : (
