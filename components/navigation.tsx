@@ -46,10 +46,10 @@ export function Navigation() {
               Prompt Now
             </Link>
             <Link
-              href="/guide"
+              href="/learn"
               className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
-              Guide
+              Learn
             </Link>
           </div>
 
@@ -125,11 +125,11 @@ export function Navigation() {
                   Prompt Now
                 </Link>
                 <Link
-                  href="/guide"
+                  href="/learn"
                   className="text-xl font-semibold text-primary-foreground hover:text-primary-foreground/80 transition-colors"
                   onClick={toggleMenu}
                 >
-                  Guide
+                  Learn
                 </Link>
               </div>
 

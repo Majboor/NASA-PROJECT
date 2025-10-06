@@ -15,7 +15,7 @@ export default function GuidePage() {
     <div className="min-h-screen bg-background">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-24">
         <div className="mb-8 flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-foreground">Guides</h1>
+          <h1 className="text-2xl font-bold text-foreground">Learn</h1>
           <Link href="/" className="text-sm text-muted-foreground hover:text-foreground">Back to Home</Link>
         </div>
 
