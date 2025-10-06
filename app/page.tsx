@@ -39,7 +39,7 @@ export default function Home() {
       <Hero />
       <Features />
       <HowItWorks />
-      <CTA />
+      <CTA onOpenGuide={() => setShowGuide(true)} />
     </main>
   )
 }

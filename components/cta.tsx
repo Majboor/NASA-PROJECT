@@ -1,8 +1,13 @@
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { MouseEventHandler } from "react"
 import { ArrowRight } from "lucide-react"
 
-export function CTA() {
+interface CTAProps {
+  onOpenGuide?: () => void
+}
+
+export function CTA({ onOpenGuide }: CTAProps) {
   return (
     <section className="relative py-24 px-6">
       <div className="container mx-auto">
@@ -15,17 +20,22 @@ export function CTA() {
               Join learners, dreamers, and experts experimenting with next-generation space habitats.
             </p>
             <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
-              <Link href="/app">
-                <Button size="lg" className="bg-gradient-to-r from-primary to-orange-500 text-primary-foreground hover:from-primary/90 hover:to-orange-500/90 group shadow-xl">
-                  Start Free Trial
-                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </Button>
-              </Link>
-              <Link href="/app">
-                <Button size="lg" variant="outline" className="border-primary/50 bg-card/50 backdrop-blur-sm hover:bg-primary/10">
-                  Schedule Demo
-                </Button>
-              </Link>
+              <Button
+                size="lg"
+                onClick={onOpenGuide}
+                className="bg-gradient-to-r from-primary to-orange-500 text-primary-foreground hover:from-primary/90 hover:to-orange-500/90 group shadow-xl"
+              >
+                For Professionals
+                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                onClick={onOpenGuide}
+                className="border-primary/50 bg-card/50 backdrop-blur-sm hover:bg-primary/10"
+              >
+                For Everyone
+              </Button>
             </div>
           </div>
 
