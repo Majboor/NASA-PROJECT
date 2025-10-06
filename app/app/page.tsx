@@ -1887,9 +1887,15 @@ export default function AppPage() {
                         </div>
                       </div>
                     ) : (
-                      <div className="text-center text-muted-foreground">
+                      <div className="text-center text-muted-foreground" aria-live="polite">
                         <Layers className="h-12 w-12 mx-auto mb-2" />
                         <p>Image is taking longer than usual to generate. We’ll retry automatically.</p>
+                        {(isRetrying || isAutoRefreshingImage || isGenerating) && (
+                          <div className="mt-2 flex items-center justify-center gap-2 text-xs">
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                            <span>Retrying...</span>
+                          </div>
+                        )}
                         {lastCreateRequest && (
                           <div className="mt-2">
                             <Button
@@ -1908,7 +1914,11 @@ export default function AppPage() {
                                 }
                               }}
                             >
-                              Retry now
+                              {isRetrying || isAutoRefreshingImage || isGenerating ? (
+                                <span className="inline-flex items-center gap-2"><Loader2 className="h-4 w-4 animate-spin" /> Retrying...</span>
+                              ) : (
+                                'Retry now'
+                              )}
                             </Button>
                           </div>
                         )}
