@@ -22,6 +22,14 @@ interface GuideModalProps {
 export function GuideModal({ open, onClose }: GuideModalProps) {
   const [selectedGuide, setSelectedGuide] = useState<GuideKey | null>(null)
   const [stepIndex, setStepIndex] = useState(0)
+  const sampleImages = [
+    "/sample3D_floorplan.jpeg",
+    "/sample3D_floorplan_angle2.jpeg",
+    "/sample3D_floorplan_angle3.jpeg",
+    "/sample3D_floorplan_angle4.jpeg",
+    "/sample2D_floorplan_angle2.jpeg",
+    "/WhatsApp Image 2025-10-05 at 9.40.21 PM.jpeg",
+  ]
 
   const professionalSteps: GuideStep[] = useMemo(
     () => [
@@ -168,18 +176,20 @@ export function GuideModal({ open, onClose }: GuideModalProps) {
         {selectedGuide === null ? (
           <div className="p-6 grid gap-6 sm:grid-cols-2">
             <div className="rounded-xl border border-border/50 bg-card/50 p-5 flex flex-col">
-              <div className="relative mb-4 h-40 w-full overflow-hidden rounded-lg border border-border/50">
-                <Image src="/placeholder.jpg" alt="Professional" fill className="object-cover" />
+              <div className="relative mb-2 h-40 w-full overflow-hidden rounded-lg border border-border/50">
+                <Image src="/sample3D_floorplan.jpeg" alt="Professional" fill className="object-cover" />
               </div>
+              <div className="text-center text-xs text-muted-foreground mb-2">Created by our software</div>
               <h4 className="text-base font-semibold text-foreground mb-1">Professional</h4>
               <p className="text-sm text-muted-foreground mb-4">Deep dive into constraints, systems, and evaluation criteria.</p>
               <Button onClick={() => { setSelectedGuide("professional"); setStepIndex(0) }} className="mt-auto">Start Professional Guide</Button>
             </div>
 
             <div className="rounded-xl border border-border/50 bg-card/50 p-5 flex flex-col">
-              <div className="relative mb-4 h-40 w-full overflow-hidden rounded-lg border border-border/50">
-                <Image src="/placeholder.jpg" alt="For Everyone" fill className="object-cover" />
+              <div className="relative mb-2 h-40 w-full overflow-hidden rounded-lg border border-border/50">
+                <Image src="/sample2D_floorplan_angle2.jpeg" alt="For Everyone" fill className="object-cover" />
               </div>
+              <div className="text-center text-xs text-muted-foreground mb-2">Created by our software</div>
               <h4 className="text-base font-semibold text-foreground mb-1">For Everyone</h4>
               <p className="text-sm text-muted-foreground mb-4">Simple, friendly walkthrough of how the app works.</p>
               <Button onClick={() => { setSelectedGuide("everyone"); setStepIndex(0) }} className="mt-auto" variant="outline">Start For Everyone</Button>
@@ -189,7 +199,8 @@ export function GuideModal({ open, onClose }: GuideModalProps) {
           <div className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div className="relative h-56 w-full overflow-hidden rounded-lg border border-border/50">
-                <Image src="/placeholder.jpg" alt="Guide visual" fill className="object-cover" />
+                <Image src={sampleImages[stepIndex % sampleImages.length]} alt="Guide visual" fill className="object-cover" />
+                <div className="absolute -bottom-6 left-0 right-0 text-center text-xs text-muted-foreground">Created by our software</div>
               </div>
               <div className="flex flex-col">
                 <div>
