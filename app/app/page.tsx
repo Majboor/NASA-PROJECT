@@ -106,6 +106,8 @@ export default function AppPage() {
   const [isTabsExpanded, setIsTabsExpanded] = useState(false)
   const [retryAttempts, setRetryAttempts] = useState(0)
   const [isRetrying, setIsRetrying] = useState(false)
+  const [lastCreateRequest, setLastCreateRequest] = useState<CreatePlanRequest | null>(null)
+  const [isAutoRefreshingImage, setIsAutoRefreshingImage] = useState(false)
 
   // Auto-scroll to bottom of chat
   const scrollToBottom = () => {
@@ -907,7 +909,7 @@ export default function AppPage() {
           // Show retry message
           const retryMessage: Message = {
             role: "assistant",
-            content: `🔄 Server error (${error?.status || 'network'}). Trying again... (Attempt ${attempt + 1}/${maxRetries})`,
+            content: `⏳ The server is taking longer than usual (status: ${error?.status || 'network'}). Retrying now... (Attempt ${attempt + 1}/${maxRetries})`,
             type: "text"
           }
           setMessages(prev => [...prev, retryMessage])
@@ -948,6 +950,7 @@ export default function AppPage() {
       const request: CreatePlanRequest = {
         zones: zones
       }
+      setLastCreateRequest(request)
       
       console.log('Sending API request:', request)
       const result = await retryCreateRequest(request)
@@ -991,6 +994,29 @@ export default function AppPage() {
       setRetryAttempts(0)
     }
   }
+
+  // Auto-retry when a plan exists but the current plan image URL is missing
+  useEffect(() => {
+    if (!lastCreateRequest) return
+    const hasPlans = generatedPlans.length > 0
+    const missingImage = hasPlans && !generatedPlans[selectedPlanIndex]?.image_url
+    if (missingImage && !isGenerating && !isRetrying && !isAutoRefreshingImage) {
+      setIsAutoRefreshingImage(true)
+      const doRefresh = async () => {
+        try {
+          const refreshed = await retryCreateRequest(lastCreateRequest, 1)
+          if (refreshed?.results?.length) {
+            setGeneratedPlans(refreshed.results)
+          }
+        } catch (e) {
+          // leave as-is; retries already messaged in retryCreateRequest
+        } finally {
+          setIsAutoRefreshingImage(false)
+        }
+      }
+      doRefresh()
+    }
+  }, [generatedPlans, selectedPlanIndex, lastCreateRequest, isGenerating, isRetrying, isAutoRefreshingImage])
 
   const handleSend = () => {
     if (!input.trim()) return
@@ -1863,9 +1889,31 @@ export default function AppPage() {
                     ) : (
                       <div className="text-center text-muted-foreground">
                         <Layers className="h-12 w-12 mx-auto mb-2" />
-                        <p>No floor plan image available</p>
-                </div>
-              )}
+                        <p>Image is taking longer than usual to generate. We’ll retry automatically.</p>
+                        {lastCreateRequest && (
+                          <div className="mt-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              disabled={isRetrying || isAutoRefreshingImage || isGenerating}
+                              onClick={async () => {
+                                try {
+                                  setIsAutoRefreshingImage(true)
+                                  const refreshed = await retryCreateRequest(lastCreateRequest, 1)
+                                  if (refreshed?.results?.length) {
+                                    setGeneratedPlans(refreshed.results)
+                                  }
+                                } finally {
+                                  setIsAutoRefreshingImage(false)
+                                }
+                              }}
+                            >
+                              Retry now
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    )}
                     
                     {/* Status indicators */}
                     <div className="absolute top-2 right-2 flex flex-col gap-1">
