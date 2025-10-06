@@ -155,6 +155,7 @@ export function GuideModal({ open, onClose }: GuideModalProps) {
 
   const steps = selectedGuide === "professional" ? professionalSteps : everyoneSteps
   const isLast = selectedGuide !== null && stepIndex === steps.length - 1
+  const totalStepsWithVideo = steps.length + 1
 
   if (!open) return null
 
@@ -199,17 +200,37 @@ export function GuideModal({ open, onClose }: GuideModalProps) {
           <div className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div className="relative h-56 w-full overflow-hidden rounded-lg border border-border/50">
-                <Image src={sampleImages[stepIndex % sampleImages.length]} alt="Guide visual" fill className="object-cover" />
-                <div className="absolute -bottom-6 left-0 right-0 text-center text-xs text-muted-foreground">Created by our software</div>
+                {stepIndex === steps.length ? (
+                  <div className="relative h-full w-full bg-black">
+                    <video src="/sample_3d_video.mp4" className="h-full w-full object-cover" />
+                    <button
+                      className="absolute inset-0 flex items-center justify-center text-white"
+                      onClick={(e) => {
+                        const vid = (e.currentTarget.previousSibling as HTMLVideoElement)
+                        vid?.play()
+                        ;(e.currentTarget as HTMLButtonElement).style.display = 'none'
+                      }}
+                    >
+                      <div className="rounded-full bg-white/20 border border-white/50 p-6 hover:bg-white/30 transition">
+                        ▶
+                      </div>
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <Image src={sampleImages[stepIndex % sampleImages.length]} alt="Guide visual" fill className="object-cover" />
+                    <div className="absolute -bottom-6 left-0 right-0 text-center text-xs text-muted-foreground">Created by our software</div>
+                  </>
+                )}
               </div>
               <div className="flex flex-col">
                 <div>
                   <div className="text-xs text-muted-foreground mb-1 uppercase tracking-wide">{selectedGuide === "professional" ? "Professional Guide" : "For Everyone"}</div>
-                  <h4 className="text-xl font-semibold text-foreground mb-2">{steps[stepIndex]?.title}</h4>
-                  {steps[stepIndex]?.description && (
+                  <h4 className="text-xl font-semibold text-foreground mb-2">{stepIndex === steps.length ? 'Video Demo' : steps[stepIndex]?.title}</h4>
+                  {stepIndex !== steps.length && steps[stepIndex]?.description && (
                     <p className="text-sm text-muted-foreground mb-3">{steps[stepIndex]?.description}</p>
                   )}
-                  {steps[stepIndex]?.bullets && (
+                  {stepIndex !== steps.length && steps[stepIndex]?.bullets && (
                     <ul className="space-y-1">
                       {steps[stepIndex]!.bullets!.map((b, i) => (
                         <li key={i} className="flex items-start gap-2 text-sm text-foreground">
@@ -222,7 +243,7 @@ export function GuideModal({ open, onClose }: GuideModalProps) {
                 </div>
 
                 <div className="mt-auto pt-5 flex items-center justify-between">
-                  <div className="text-xs text-muted-foreground">Step {stepIndex + 1} of {steps.length}</div>
+                  <div className="text-xs text-muted-foreground">Step {Math.min(stepIndex + 1, totalStepsWithVideo)} of {totalStepsWithVideo}</div>
                   <div className="flex gap-2">
                     <Button
                       variant="outline"
@@ -236,14 +257,20 @@ export function GuideModal({ open, onClose }: GuideModalProps) {
                     >
                       <ArrowLeft className="h-4 w-4 mr-1" /> Back
                     </Button>
-                    {isLast ? (
+                    {stepIndex === steps.length ? (
+                      <Link href="/app">
+                        <Button className="bg-gradient-to-r from-primary to-orange-500 text-primary-foreground">
+                          Open the App <ArrowRight className="h-4 w-4 ml-1" />
+                        </Button>
+                      </Link>
+                    ) : isLast ? (
                       <Link href="/app">
                         <Button className="bg-gradient-to-r from-primary to-orange-500 text-primary-foreground">
                           Open the App <ArrowRight className="h-4 w-4 ml-1" />
                         </Button>
                       </Link>
                     ) : (
-                      <Button onClick={() => setStepIndex((i) => Math.min(steps.length - 1, i + 1))}>
+                      <Button onClick={() => setStepIndex((i) => Math.min(steps.length, i + 1))}>
                         Next <ArrowRight className="h-4 w-4 ml-1" />
                       </Button>
                     )}

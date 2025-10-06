@@ -1,9 +1,12 @@
 import { Button } from "@/components/ui/button"
+import { useState } from "react"
+import { VideoModal } from "@/components/video-modal"
 import Link from "next/link"
 import { OrbitSystem } from "@/components/orbit-system"
 import { ArrowRight, Sparkles } from "lucide-react"
 
 export function Hero() {
+  const [showVideo, setShowVideo] = useState(false)
   return (
     <section className="relative flex min-h-screen items-center justify-center px-4 sm:px-6 pt-20 overflow-hidden">
       {/* Background Orbit System - only for mobile and tablet (not desktop) */}
@@ -48,11 +51,9 @@ export function Hero() {
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
-            <Link href="/app">
-              <Button size="lg" variant="outline" className="border-primary/50 bg-card/50 backdrop-blur-sm hover:bg-primary/10 w-full sm:w-auto">
-                Watch Demo
-              </Button>
-            </Link>
+            <Button size="lg" variant="outline" className="border-primary/50 bg-card/50 backdrop-blur-sm hover:bg-primary/10 w-full sm:w-auto" onClick={() => setShowVideo(true)}>
+              Watch Demo
+            </Button>
           </div>
 
           {/* Enhanced Stats with better mobile design */}
@@ -116,11 +117,9 @@ export function Hero() {
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>
               </Link>
-              <Link href="/app">
-                <Button size="lg" variant="outline" className="border-primary/50 bg-card/50 backdrop-blur-sm hover:bg-primary/10">
-                  Watch Demo
-                </Button>
-              </Link>
+              <Button size="lg" variant="outline" className="border-primary/50 bg-card/50 backdrop-blur-sm hover:bg-primary/10" onClick={() => setShowVideo(true)}>
+                Watch Demo
+              </Button>
             </div>
 
             <div className="grid grid-cols-3 gap-6 pt-6">
@@ -148,6 +147,9 @@ export function Hero() {
           </div>
         </div>
       </div>
+      {showVideo && (
+        <VideoModal open={showVideo} onClose={() => setShowVideo(false)} src="/sample_3d_video.mp4" />
+      )}
     </section>
   )
 }
