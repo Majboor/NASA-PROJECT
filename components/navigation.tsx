@@ -55,7 +55,9 @@ export function Navigation() {
 
           {/* Desktop CTA Button */}
           <div className="hidden lg:flex">
-            <Button className="bg-primary text-primary-foreground hover:bg-primary/90">Get Started</Button>
+            <Link href="/app">
+              <Button className="bg-primary text-primary-foreground hover:bg-primary/90">Get Started</Button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -133,9 +135,11 @@ export function Navigation() {
 
               {/* Mobile CTA */}
               <div className="p-6 border-t border-primary-foreground/20">
-                <Button className="w-full bg-primary-foreground text-primary hover:bg-primary-foreground/90 text-lg py-6">
-                  Get Started
-                </Button>
+                <Link href="/app">
+                  <Button className="w-full bg-primary-foreground text-primary hover:bg-primary-foreground/90 text-lg py-6">
+                    Get Started
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>

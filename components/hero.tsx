@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
 import { OrbitSystem } from "@/components/orbit-system"
 import { ArrowRight, Sparkles } from "lucide-react"
 
@@ -41,13 +42,17 @@ export function Hero() {
 
           {/* Enhanced Buttons */}
           <div className="flex flex-col gap-3 w-full sm:w-auto sm:flex-row sm:gap-4">
-            <Button size="lg" className="bg-gradient-to-r from-primary to-orange-500 text-primary-foreground hover:from-primary/90 hover:to-orange-500/90 group backdrop-blur-sm shadow-lg w-full sm:w-auto">
-              Explore More
-              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Button>
-            <Button size="lg" variant="outline" className="border-primary/50 bg-card/50 backdrop-blur-sm hover:bg-primary/10 w-full sm:w-auto">
-              Watch Demo
-            </Button>
+            <Link href="/app">
+              <Button size="lg" className="bg-gradient-to-r from-primary to-orange-500 text-primary-foreground hover:from-primary/90 hover:to-orange-500/90 group backdrop-blur-sm shadow-lg w-full sm:w-auto">
+                Explore More
+                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Button>
+            </Link>
+            <Link href="/app">
+              <Button size="lg" variant="outline" className="border-primary/50 bg-card/50 backdrop-blur-sm hover:bg-primary/10 w-full sm:w-auto">
+                Watch Demo
+              </Button>
+            </Link>
           </div>
 
           {/* Enhanced Stats with better mobile design */}
@@ -72,9 +77,11 @@ export function Hero() {
           {/* Mobile-specific call to action */}
           <div className="pt-4 text-center">
             <p className="text-sm text-muted-foreground mb-3">Ready to shape the future of space living?</p>
-            <Button size="lg" className="bg-gradient-to-r from-primary to-orange-500 text-primary-foreground hover:from-primary/90 hover:to-orange-500/90 shadow-xl">
-              Start Your Journey
-            </Button>
+            <Link href="/app">
+              <Button size="lg" className="bg-gradient-to-r from-primary to-orange-500 text-primary-foreground hover:from-primary/90 hover:to-orange-500/90 shadow-xl">
+                Start Your Journey
+              </Button>
+            </Link>
           </div>
         </div>
 
@@ -103,13 +110,17 @@ export function Hero() {
             </p>
 
             <div className="flex flex-col gap-4 sm:flex-row">
-              <Button size="lg" className="bg-gradient-to-r from-primary to-orange-500 text-primary-foreground hover:from-primary/90 hover:to-orange-500/90 group shadow-xl">
-                Explore More
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Button>
-              <Button size="lg" variant="outline" className="border-primary/50 bg-card/50 backdrop-blur-sm hover:bg-primary/10">
-                Watch Demo
-              </Button>
+              <Link href="/app">
+                <Button size="lg" className="bg-gradient-to-r from-primary to-orange-500 text-primary-foreground hover:from-primary/90 hover:to-orange-500/90 group shadow-xl">
+                  Explore More
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Button>
+              </Link>
+              <Link href="/app">
+                <Button size="lg" variant="outline" className="border-primary/50 bg-card/50 backdrop-blur-sm hover:bg-primary/10">
+                  Watch Demo
+                </Button>
+              </Link>
             </div>
 
             <div className="grid grid-cols-3 gap-6 pt-6">
