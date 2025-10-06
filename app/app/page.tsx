@@ -106,6 +106,7 @@ export default function AppPage() {
   const [isTabsExpanded, setIsTabsExpanded] = useState(false)
   const [retryAttempts, setRetryAttempts] = useState(0)
   const [isRetrying, setIsRetrying] = useState(false)
+  const [showChatInfo, setShowChatInfo] = useState(false)
   const [lastCreateRequest, setLastCreateRequest] = useState<CreatePlanRequest | null>(null)
   const [isAutoRefreshingImage, setIsAutoRefreshingImage] = useState(false)
 
@@ -1422,13 +1423,19 @@ export default function AppPage() {
               <Input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleSend()}
-                placeholder="Type and press Enter to see current options..."
+                onKeyDown={(e) => {
+                  // Disable sending via Enter for now
+                  if (e.key === "Enter") {
+                    e.preventDefault()
+                    setShowChatInfo(true)
+                  }
+                }}
+                placeholder="Chat is in preview. Sending is disabled."
                 className="flex-1 bg-background/50 text-sm"
                 disabled={isGenerating}
               />
               <Button 
-                onClick={handleSend} 
+                onClick={() => setShowChatInfo(true)} 
                 size="icon" 
                 className="bg-gradient-to-r from-primary to-orange-500 hover:from-primary/90 hover:to-orange-500/90"
                 disabled={isGenerating}
@@ -1969,8 +1976,8 @@ export default function AppPage() {
               )}
           </div>
 
-          {/* Bottom Controls - Collapsible */}
-          <div className={`fixed bottom-0 left-0 right-0 bg-card/30 backdrop-blur-sm border-t border-border/50 transition-all duration-300 ${
+          {/* Bottom Controls - Collapsible (scoped to visualization only) */}
+          <div className={`bg-card/30 backdrop-blur-sm border-t border-border/50 transition-all duration-300 flex-shrink-0 ${
             isTabsExpanded ? 'h-auto max-h-[50vh]' : 'h-12'
           }`}>
             <div className="p-3">
@@ -2141,6 +2148,21 @@ export default function AppPage() {
       </div>
     </div>
 
+    {/* Chat info modal */}
+    {showChatInfo && (
+      <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+        <div className="bg-background border border-border rounded-lg max-w-lg w-full p-5">
+          <h3 className="text-lg font-semibold text-foreground mb-2">Chat feature in progress</h3>
+          <p className="text-sm text-muted-foreground">
+            We&apos;re still polishing the conversational flow. For now, designs are guided by NASA research guidelines and best practices. 
+            We use those references to generate zone-based habitat layouts.
+          </p>
+          <div className="mt-4 flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setShowChatInfo(false)}>Close</Button>
+          </div>
+        </div>
+      </div>
+    )}
       {/* Full Size Modal */}
       {isModalOpen && selectedPlan && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
