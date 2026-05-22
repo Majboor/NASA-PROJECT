@@ -37,10 +37,17 @@ export function HowItWorks() {
         <div className="grid gap-8 md:grid-cols-3">
           {steps.map((step, index) => (
             <div key={index} className="relative">
-              <Card className="relative h-full border-border bg-card/50 p-8 backdrop-blur-sm">
-                <div className="mb-6 text-6xl font-bold text-primary/20">{step.number}</div>
+              <Card className="card-lift group relative h-full overflow-hidden border-border bg-card/50 p-8 backdrop-blur-sm">
+                {/* Watermark step number */}
+                <div className="mb-6 bg-gradient-to-br from-primary/50 to-orange-500/20 bg-clip-text text-6xl font-bold text-transparent transition-transform duration-500 group-hover:-translate-y-1">
+                  {step.number}
+                </div>
                 <h3 className="mb-4 text-2xl font-semibold text-card-foreground">{step.title}</h3>
                 <p className="leading-relaxed text-muted-foreground">{step.description}</p>
+                {/* Hover accent bar */}
+                <div className="absolute inset-x-0 bottom-0 h-0.5 origin-left scale-x-0 bg-gradient-to-r from-primary to-orange-500 transition-transform duration-500 group-hover:scale-x-100" />
+                {/* Corner glow */}
+                <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-primary/10 opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100" />
               </Card>
               {index < steps.length - 1 && (
                 <div className="absolute -right-4 top-1/2 hidden h-px w-8 bg-gradient-to-r from-primary to-transparent md:block" />

@@ -85,8 +85,51 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html {
+    /* Prevent iOS auto-zoom on text and keep 100% sizing on orientation change. */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+  html,
+  body {
+    /* Never allow a stray wide child to create a horizontal scrollbar on mobile. */
+    max-width: 100%;
+    overflow-x: hidden;
+  }
   body {
     @apply bg-background text-foreground;
+    /* Softer tap flash on touch devices. */
+    -webkit-tap-highlight-color: transparent;
+  }
+  /* Media never overflows its container on narrow viewports. */
+  img,
+  video,
+  canvas,
+  svg {
+    max-width: 100%;
+  }
+  /* Long unbroken strings (URLs, IDs) wrap instead of forcing overflow. */
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  li,
+  span {
+    overflow-wrap: break-word;
+  }
+}
+
+/* Respect users who prefer reduced motion: neutralise the many infinite
+   orbit / spin / pulse animations without changing layout. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
@@ -275,4 +318,250 @@
 .animate-color-load {
   animation: color-load 0.4s ease-out forwards;
   color: oklch(0.65 0.02 250); /* Start with muted color */
+}
+
+/* ============================================================
+   UI-DESIGN POLISH LAYER  (enh/ui-design)
+   Premium micro-polish: scrollbars, selection, focus, motion,
+   reusable glass/gradient/reveal utilities. Append-only so it
+   layers cleanly over the existing space theme.
+   ============================================================ */
+
+/* Smooth in-page navigation with room for the fixed navbar */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+/* Themed selection */
+::selection {
+  background: oklch(0.55 0.18 35 / 0.35);
+  color: oklch(0.99 0 0);
+}
+
+/* Space-themed custom scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: oklch(0.45 0.12 35 / 0.6) transparent;
+}
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: oklch(0.14 0.02 250 / 0.4);
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: linear-gradient(
+    oklch(0.55 0.18 35 / 0.7),
+    oklch(0.45 0.15 250 / 0.7)
+  );
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    oklch(0.62 0.2 35 / 0.9),
+    oklch(0.5 0.16 250 / 0.9)
+  );
+  background-clip: padding-box;
+}
+
+/* Sharper, consistent keyboard focus ring */
+:focus-visible {
+  outline: 2px solid oklch(0.62 0.2 35 / 0.9);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ---- Reusable utilities ---- */
+
+/* Brand gradient text (matches the orange->deep-orange used on titles) */
+.text-gradient-brand {
+  background: linear-gradient(
+    100deg,
+    oklch(0.72 0.17 55),
+    oklch(0.6 0.2 30)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Glassy panel */
+.glass-card {
+  background: oklch(0.18 0.03 250 / 0.45);
+  backdrop-filter: blur(14px) saturate(1.1);
+  -webkit-backdrop-filter: blur(14px) saturate(1.1);
+  border: 1px solid oklch(0.4 0.05 250 / 0.25);
+}
+
+/* Card lift + glow on hover */
+.card-lift {
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.35s ease;
+  will-change: transform;
+}
+.card-lift:hover {
+  transform: translateY(-6px);
+  border-color: oklch(0.55 0.18 35 / 0.5);
+  box-shadow:
+    0 18px 40px -18px oklch(0.55 0.18 35 / 0.45),
+    0 0 0 1px oklch(0.55 0.18 35 / 0.15);
+}
+
+/* Animated gradient sheen for premium buttons/badges */
+.btn-glow {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+.btn-glow::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    transparent 30%,
+    oklch(1 0 0 / 0.28) 50%,
+    transparent 70%
+  );
+  transform: translateX(-120%);
+  transition: transform 0.7s ease;
+}
+.btn-glow:hover::after {
+  transform: translateX(120%);
+}
+
+/* Animated underline for links */
+.link-underline {
+  position: relative;
+}
+.link-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  height: 2px;
+  width: 100%;
+  background: linear-gradient(90deg, oklch(0.6 0.2 35), oklch(0.72 0.15 55));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.link-underline:hover::after {
+  transform: scaleX(1);
+}
+
+/* Soft nebula glow blob */
+.nebula-glow {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(80px);
+  opacity: 0.5;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at center,
+    oklch(0.55 0.18 35 / 0.5),
+    transparent 70%
+  );
+  animation: nebula-drift 14s ease-in-out infinite;
+}
+@keyframes nebula-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(20px, -24px, 0) scale(1.12); }
+}
+
+/* Shimmer skeleton for loading states */
+.shimmer {
+  position: relative;
+  overflow: hidden;
+  background: oklch(0.25 0.03 250 / 0.4);
+}
+.shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    oklch(0.6 0.05 250 / 0.25),
+    transparent
+  );
+  animation: shimmer-sweep 1.6s infinite;
+}
+@keyframes shimmer-sweep {
+  100% { transform: translateX(100%); }
+}
+
+/* Scroll-reveal (CSS-only via scroll-driven animations, progressive
+   enhancement — content is fully visible where unsupported) */
+@keyframes reveal-up {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal-on-scroll {
+      animation: reveal-up both linear;
+      animation-timeline: view();
+      animation-range: entry 5% cover 26%;
+    }
+  }
+}
+
+/* Fine grain/noise overlay for atmosphere */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.035;
+  mix-blend-mode: screen;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Respect reduced motion globally for our decorative animations */
+@media (prefers-reduced-motion: reduce) {
+  .nebula-glow,
+  .shimmer::after,
+  .btn-glow::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  html { scroll-behavior: auto; }
+}
+
+/* Accessibility: honor the OS "reduce motion" preference.
+   Neutralizes the decorative orbital / twinkle / pulse loops and any
+   Tailwind-driven transitions so motion-sensitive users get a calm,
+   static experience without losing layout or content. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Keep the letter-load intro readable in its final (white) state */
+  .animate-color-load {
+    color: oklch(0.98 0 0) !important;
+    transform: none !important;
+  }
+}
+
+/* Accessibility: guarantee a clearly visible keyboard focus ring on every
+   interactive element, independent of the base outline-ring utility.
+   Only shows for keyboard users (:focus-visible), never on mouse click. */
+:where(a, button, input, select, textarea, [tabindex], [role="button"]):focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: calc(var(--radius) - 4px);
 }

@@ -42,7 +42,7 @@ export function Features() {
           {features.map((feature, index) => (
             <Card
               key={index}
-              className="group relative overflow-hidden border-border bg-card/50 p-4 sm:p-6 backdrop-blur-sm transition-all hover:border-primary/50 hover:bg-card/80 hover:shadow-lg hover:shadow-primary/10"
+              className="card-lift group relative overflow-hidden border-border bg-card/50 p-4 sm:p-6 backdrop-blur-sm hover:bg-card/80"
             >
               <div className="mb-4 inline-flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-lg bg-gradient-to-br from-primary/20 to-orange-500/20 text-primary transition-transform group-hover:scale-110 group-hover:rotate-6">
                 <feature.icon className="h-5 w-5 sm:h-6 sm:w-6" />
