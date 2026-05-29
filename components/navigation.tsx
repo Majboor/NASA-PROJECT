@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import { Menu, X } from "lucide-react"
+import { useMenuA11y } from "@/lib/use-menu-a11y"
 
 export function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -12,6 +13,9 @@ export function Navigation() {
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
   }
+
+  // Escape-to-close, background-scroll lock, and auto-close when resized to desktop.
+  useMenuA11y(isMenuOpen, () => setIsMenuOpen(false), { closeOnDesktop: true })
 
   return (
     <>
@@ -44,6 +48,18 @@ export function Navigation() {
               className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
               Prompt Now
+            </Link>
+            <Link
+              href="/analyzer"
+              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Analyzer
+            </Link>
+            <Link
+              href="/estimate"
+              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Estimate
             </Link>
             <Link
               href="/learn"
@@ -125,6 +141,20 @@ export function Navigation() {
                   onClick={toggleMenu}
                 >
                   Prompt Now
+                </Link>
+                <Link
+                  href="/analyzer"
+                  className="text-xl font-semibold text-primary-foreground hover:text-primary-foreground/80 transition-colors"
+                  onClick={toggleMenu}
+                >
+                  Analyzer
+                </Link>
+                <Link
+                  href="/estimate"
+                  className="text-xl font-semibold text-primary-foreground hover:text-primary-foreground/80 transition-colors"
+                  onClick={toggleMenu}
+                >
+                  Estimate
                 </Link>
                 <Link
                   href="/learn"

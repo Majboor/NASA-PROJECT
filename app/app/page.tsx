@@ -11,6 +11,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card } from "@/components/ui/card"
 import { Send, Sparkles, Layers, Box, Maximize2, Settings, Save, Download, Share, Play, Pause, RotateCcw, Menu, X, ArrowRight, ArrowLeft, Check, Plus, Trash2, Loader2, BarChart3, MessageSquare, ArrowDown } from "lucide-react"
 import { createFloorPlan, editFloorPlan, type CreatePlanRequest, type EditPlanRequest } from "@/lib/api"
+import { useMenuA11y } from "@/lib/use-menu-a11y"
+import { zonesToApiRequest, countTotalSeparations } from "@/lib/plan-helpers"
 
 // Types for the questionnaire system
 interface QuestionnaireData {
@@ -689,15 +691,10 @@ export default function AppPage() {
 
   const showSummaryWithData = (data: QuestionnaireData) => {
     console.log('showSummaryWithData called with data:', data)
-    const totalSeparations = data.zoneConfigurations.reduce((sum, config) => sum + config.interfaceCount, 0)
-    
+    const totalSeparations = countTotalSeparations(data.zoneConfigurations)
+
     // Generate the API request JSON directly from zone configurations
-    const apiRequest = {
-      zones: data.zoneConfigurations.map(config => ({
-        type: config.zoneName,
-        compartments: config.separationNames
-      }))
-    }
+    const apiRequest = zonesToApiRequest(data.zoneConfigurations)
     console.log('Generated API request:', apiRequest)
     
     const summaryMessage: Message = {
@@ -943,14 +940,7 @@ export default function AppPage() {
     
     try {
       // Convert zone configurations to API format
-      const zones = questionnaireData.zoneConfigurations.map(config => ({
-        type: config.zoneName,
-        compartments: config.separationNames
-      }))
-      
-      const request: CreatePlanRequest = {
-        zones: zones
-      }
+      const request: CreatePlanRequest = zonesToApiRequest(questionnaireData.zoneConfigurations)
       setLastCreateRequest(request)
       
       console.log('Sending API request:', request)
@@ -1062,8 +1052,15 @@ export default function AppPage() {
     setIsMenuOpen(!isMenuOpen)
   }
 
+  // Escape-to-close for the slide-in menu and the overlay modals. The app shell
+  // manages its own scrolling, so background scroll-lock is left off here.
+  useMenuA11y(isMenuOpen, () => setIsMenuOpen(false), { lockScroll: false })
+  useMenuA11y(showChatInfo, () => setShowChatInfo(false), { lockScroll: false })
+  useMenuA11y(isModalOpen, () => setIsModalOpen(false), { lockScroll: false })
+  useMenuA11y(showEditModal, () => setShowEditModal(false), { lockScroll: false })
+
   return (
-    <div className="h-screen bg-background flex flex-col overflow-hidden">
+    <div id="main-content" className="h-screen bg-background flex flex-col overflow-hidden">
       {/* Header Bar */}
       <header className="border-b border-border/50 bg-background/80 backdrop-blur-lg px-4 sm:px-6 py-3 flex-shrink-0">
         <div className="flex items-center justify-between">

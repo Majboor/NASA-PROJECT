@@ -6,12 +6,16 @@ import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Upload, Pencil, Ruler, Move, Maximize2, Check, X, GitCompare, Download, Save, Share, BarChart3, Menu } from "lucide-react"
+import { useMenuA11y } from "@/lib/use-menu-a11y"
 
 export default function ResultsPage() {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null)
   const [activeTool, setActiveTool] = useState<string | null>(null)
   const [showComparison, setShowComparison] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+  // Escape-to-close and background-scroll lock for the slide-in menu.
+  useMenuA11y(isMenuOpen, () => setIsMenuOpen(false))
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -27,7 +31,7 @@ export default function ResultsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div id="main-content" className="min-h-screen bg-background flex flex-col">
       {/* Header Bar */}
       <header className="border-b border-border/50 bg-background/80 backdrop-blur-lg px-4 sm:px-6 py-3">
         <div className="flex items-center justify-between">

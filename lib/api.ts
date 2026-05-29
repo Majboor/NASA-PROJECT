@@ -2,6 +2,55 @@
 
 const API_BASE_URL = 'https://plangen.waleeds.world'
 
+// Default per-request timeout so a stalled backend never hangs the UI forever.
+const DEFAULT_TIMEOUT_MS = 120000
+
+/**
+ * Error type that carries an HTTP-ish `status` so callers can decide whether to
+ * retry. Network failures and timeouts use status 0 (treated as retryable);
+ * real HTTP errors carry the response status (4xx are not retried).
+ */
+export class ApiError extends Error {
+  status: number
+  constructor(message: string, status: number) {
+    super(message)
+    this.name = 'ApiError'
+    this.status = status
+  }
+}
+
+/**
+ * fetch wrapper with a timeout (via AbortController) that normalises failures
+ * into ApiError instances with a meaningful `status`.
+ */
+async function fetchWithTimeout(
+  input: string,
+  init: RequestInit = {},
+  timeoutMs: number = DEFAULT_TIMEOUT_MS,
+): Promise<Response> {
+  // Guard for non-browser / older runtimes without AbortController.
+  const hasAbort = typeof AbortController !== 'undefined'
+  const controller = hasAbort ? new AbortController() : null
+  const timer = controller
+    ? setTimeout(() => controller.abort(), timeoutMs)
+    : null
+
+  try {
+    return await fetch(input, {
+      ...init,
+      signal: controller?.signal,
+    })
+  } catch (err: any) {
+    if (err?.name === 'AbortError') {
+      throw new ApiError(`Request timed out after ${Math.round(timeoutMs / 1000)}s`, 0)
+    }
+    // Network error, DNS failure, offline, CORS, etc.
+    throw new ApiError(err?.message || 'Network request failed', 0)
+  } finally {
+    if (timer) clearTimeout(timer)
+  }
+}
+
 export interface Zone {
   type: string
   compartments: string[]
@@ -46,7 +95,7 @@ export interface HealthCheckResponse {
 
 // Create floor plan
 export async function createFloorPlan(request: CreatePlanRequest): Promise<CreatePlanResponse> {
-  const response = await fetch(`${API_BASE_URL}/create_plan`, {
+  const response = await fetchWithTimeout(`${API_BASE_URL}/create_plan`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -55,7 +104,10 @@ export async function createFloorPlan(request: CreatePlanRequest): Promise<Creat
   })
 
   if (!response.ok) {
-    throw new Error(`Failed to create floor plan: ${response.status} ${response.statusText}`)
+    throw new ApiError(
+      `Failed to create floor plan: ${response.status} ${response.statusText}`,
+      response.status,
+    )
   }
 
   return response.json()
@@ -77,13 +129,16 @@ export async function editFloorPlan(
     formData.append('reference_image', referenceImage)
   }
 
-  const response = await fetch(`${API_BASE_URL}/edit`, {
+  const response = await fetchWithTimeout(`${API_BASE_URL}/edit`, {
     method: 'POST',
     body: formData
   })
 
   if (!response.ok) {
-    throw new Error(`Failed to edit floor plan: ${response.status} ${response.statusText}`)
+    throw new ApiError(
+      `Failed to edit floor plan: ${response.status} ${response.statusText}`,
+      response.status,
+    )
   }
 
   return response.json()
@@ -91,10 +146,13 @@ export async function editFloorPlan(
 
 // Health check
 export async function healthCheck(): Promise<HealthCheckResponse> {
-  const response = await fetch(`${API_BASE_URL}/health`)
+  const response = await fetchWithTimeout(`${API_BASE_URL}/health`, {}, 15000)
 
   if (!response.ok) {
-    throw new Error(`Health check failed: ${response.status} ${response.statusText}`)
+    throw new ApiError(
+      `Health check failed: ${response.status} ${response.statusText}`,
+      response.status,
+    )
   }
 
   return response.json()
