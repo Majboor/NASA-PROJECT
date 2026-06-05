@@ -74,9 +74,14 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
   }, [onComplete])
 
   return (
-    <div className="fixed inset-0 z-50 bg-gradient-to-br from-background via-background to-primary/10 overflow-hidden">
+    <div
+      className="fixed inset-0 z-50 bg-gradient-to-br from-background via-background to-primary/10 overflow-hidden"
+      role="status"
+      aria-live="polite"
+      aria-label="Loading Voronova"
+    >
       {/* Animated Background Elements */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0" aria-hidden="true">
         {/* Floating Orbs */}
         <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-primary/20 rounded-full blur-xl animate-pulse" />
         <div className="absolute top-3/4 right-1/4 w-24 h-24 bg-orange-500/20 rounded-full blur-xl animate-pulse" style={{ animationDelay: "1s" }} />
