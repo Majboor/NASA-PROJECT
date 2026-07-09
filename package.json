@@ -2,11 +2,37 @@
   "name": "voronova",
   "version": "0.1.0",
   "private": true,
+  "description": "AI-powered space habitat designer — turn a plain-language mission brief into real 2D floor plans and 3D layouts for Moon and Mars habitats.",
+  "keywords": [
+    "space-habitat",
+    "habitat-design",
+    "mars",
+    "moon",
+    "nasa-space-apps",
+    "floor-plan",
+    "3d-layout",
+    "nextjs",
+    "ai"
+  ],
+  "author": "Waleed Ajmal (https://github.com/waleedsworld)",
+  "license": "MIT",
+  "homepage": "https://voronova.waleeds.world",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/waleedsworld/NASA-PROJECT.git"
+  },
+  "bugs": {
+    "url": "https://github.com/waleedsworld/NASA-PROJECT/issues"
+  },
   "scripts": {
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "serve:dist": "serve dist -l 8234"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -60,13 +86,17 @@
     "zod": "3.25.67"
   },
   "devDependencies": {
+    "@playwright/test": "^1.61.1",
     "@tailwindcss/postcss": "^4.1.9",
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "jsdom": "^25.0.1",
     "postcss": "^8.5",
+    "serve": "^14.2.6",
     "tailwindcss": "^4.1.9",
     "tw-animate-css": "1.3.3",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^2.1.9"
   }
 }
