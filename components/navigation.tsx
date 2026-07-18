@@ -66,6 +66,8 @@ export function Navigation() {
             size="icon"
             className="lg:hidden text-foreground hover:bg-primary/10"
             onClick={toggleMenu}
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isMenuOpen}
           >
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </Button>

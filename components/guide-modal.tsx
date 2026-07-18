@@ -169,7 +169,7 @@ export function GuideModal({ open, onClose }: GuideModalProps) {
             <BookOpenText className="h-5 w-5 text-primary" />
             <h3 className="text-lg font-semibold text-foreground">Welcome Guide</h3>
           </div>
-          <Button variant="ghost" size="icon" onClick={onClose} className="hover:bg-primary/10">
+          <Button variant="ghost" size="icon" onClick={onClose} aria-label="Close guide" className="hover:bg-primary/10">
             <X className="h-5 w-5" />
           </Button>
         </div>
